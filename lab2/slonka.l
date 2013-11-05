@@ -1,6 +1,15 @@
 %{
 /* slonka.l
-   
+
+#define KRED "\x1B[31m"
+#define KNRM "\x1B[0m"
+#define KGRN "\x1B[32m"
+#define KYEL "\x1B[33m"
+#define KBLU "\x1B[34m"
+#define KMAG "\x1B[35m"
+#define KCYN "\x1B[36m"
+#define KWHT "\x1B[37m"
+
 */
 %}
 
@@ -17,17 +26,17 @@ DIGIT	[0-9]
 WRONGIP {DIGIT}{1,3}\.{DIGIT}{1,3}\.{DIGIT}{1,3}\.{DIGIT}{1,3}
 WRONGPORT {DIGIT}+
 
+int num_lines = 0
+
 %%
 
-^{HOUR}:{MINUTE}:{SECOND}\.{MICROSEC}" IP "{IP}(\.{PORT})?" > "{IP}(\.{PORT})?.*("("{SIZE}")")?.*$			{ printf("dobrze"); }
-^{DIGIT}{2}:{MINUTE}:{SECOND}\.{MICROSEC}" IP "{IP}(\.{PORT})?" > "{IP}(\.{PORT})?.*("("{SIZE}")")?.*$			{ printf("godzina nie z zakresu"); }
-^{HOUR}:{DIGIT}{2}:{SECOND}\.{MICROSEC}" IP "{IP}(\.{PORT})?" > "{IP}(\.{PORT})?.*("("{SIZE}")")?.*$			{ printf("minuta nie z zakresu"); }
-^{HOUR}:{MINUTE}:{DIGIT}:{2}\.{MICROSEC}" IP "{IP}(\.{PORT})?" > "{IP}(\.{PORT})?.*("("{SIZE}")")?.*$			{ printf("sekunda nie z zakresu"); }
-^{HOUR}:{MINUTE}:{SECOND}\.{MICROSEC}" IP "{WRONGIP}(\.{PORT})?" > "{IP}(\.{PORT})?.*("("{SIZE}")")?.*$			{ printf("adres zrodlowy ip nie z zakresu"); }
-^{HOUR}:{MINUTE}:{SECOND}\.{MICROSEC}" IP "{IP}(\.{PORT})?" > "{WRONGIP}(\.{PORT})?.*("("{SIZE}")")?.*$			{ printf("adres docelowy ip nie z zakresu"); }
+^{HOUR}:	{ printf("%s", yytext); }
+^{DIGIT}+:	{ printf("\x1B[31m%s\x1B[0m", yytext); }
+^:	{ printf("", yytext); }
+{MINUTE}:	{ printf("%s", yytext); }
+{DIGIT}+:	{ printf("\x1B[31m%s\x1B[0m", yytext); }
 
-.*	{ printf("not a valid line\n");}
-
+{SECOND}\.{MICROSEC}" IP "{IP}(\.{PORT})?" > "{IP}(\.{PORT})?.*("("{SIZE}")")?.*$			{ printf("dobrze"); }
 
 %%
 
