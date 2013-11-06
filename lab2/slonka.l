@@ -26,17 +26,32 @@ DIGIT	[0-9]
 WRONGIP {DIGIT}{1,3}\.{DIGIT}{1,3}\.{DIGIT}{1,3}\.{DIGIT}{1,3}
 WRONGPORT {DIGIT}+
 
-int num_lines = 0
+%{
+int line_num = 0;
+%}
 
 %%
 
-^{HOUR}:	{ printf("%s", yytext); }
-^{DIGIT}+:	{ printf("\x1B[31m%s\x1B[0m", yytext); }
-^:	{ printf("", yytext); }
-{MINUTE}:	{ printf("%s", yytext); }
-{DIGIT}+:	{ printf("\x1B[31m%s\x1B[0m", yytext); }
+^{HOUR}	{ printf("%s", yytext); }
+^{DIGIT}+	{ printf("\x1B[31m%s\x1B[0m", yytext); }
+^:.*$	{ printf("\x1B[31m%s %d\x1B[0m", "Brak godziny, linia", line_num); line_num++; }
 
-{SECOND}\.{MICROSEC}" IP "{IP}(\.{PORT})?" > "{IP}(\.{PORT})?.*("("{SIZE}")")?.*$			{ printf("dobrze"); }
+: { printf(":"); }
+
+{MINUTE}	{ printf("%s", yytext); }
+{DIGIT}+	{ printf("\x1B[31m%s\x1B[0m", yytext); }
+:.*$	{ printf("\x1B[31m%s %d\x1B[0m", "Brak minut, linia", line_num); line_num++; }
+
+: { printf(":"); }
+
+{SECOND}	{ printf("%s", yytext); }
+{DIGIT}+	{ printf("\x1B[31m%s\x1B[0m", yytext); }
+\..*$	{ printf("\x1B[31m%s %d\x1B[0m", "Brak sekund, linia", line_num); line_num++;}
+
+\.{MICROSEC}	{}
+\.{DIGIT}+.*$:	{ printf("\x1B[31m%s\x1B[0m", "Niepoprawne milisekundy"); }
+
+" IP "{IP}(\.{PORT})?" > "{IP}(\.{PORT})?.*("("{SIZE}")")?.*$			{ printf("%s", yytext); line_num++; }
 
 %%
 
