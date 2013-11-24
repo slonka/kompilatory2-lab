@@ -10,4 +10,4 @@ ${PROG}: lex.yy.c
 
 test: all
 	#./slonka < test_1.txt
-	./slonka < test_small.txt
+	./{PROG} < test_small.txt
