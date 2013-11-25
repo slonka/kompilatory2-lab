@@ -1126,7 +1126,7 @@ YY_RULE_SETUP
 case 10:
 YY_RULE_SETUP
 #line 56 "slonka.l"
-{ printf("%s", yytext); BEGIN(PORT_TO); }
+{ printf("\x1B[31m%s\x1B[0m", yytext); BEGIN(PORT_TO); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
@@ -1136,7 +1136,7 @@ YY_RULE_SETUP
 case 12:
 YY_RULE_SETUP
 #line 59 "slonka.l"
-{ BEGIN(BYTES_DELIM); }
+{ printf(" \x1B[31mwrong port\x1B[0m "); BEGIN(BYTES_DELIM); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP

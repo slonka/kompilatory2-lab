@@ -18,7 +18,7 @@ DIGIT	[0-9]
 WRONGIP {DIGIT}{1,3}\.{DIGIT}{1,3}\.{DIGIT}{1,3}\.{DIGIT}{1,3}
 WRONGPORT {DIGIT}+
 
-OPTIONS "mss "{DIGIT+}|"nop"|"sackOK"
+OPTIONS ("mss "{DIGIT+})|("nop")|("sackOK")
 
 
 %option yylineno
@@ -53,10 +53,10 @@ OPTIONS "mss "{DIGIT+}|"nop"|"sackOK"
 <PORT_FROM>(\.{WRONGPORT})?" > " { printf(" \x1B[31mwrong port\x1B[0m to "); BEGIN(IP_TO); }
 
 <IP_TO>{IP}	{ printf("%s", yytext); BEGIN(PORT_TO); }
-<IP_TO>{WRONGIP}	{ printf("%s", yytext); BEGIN(PORT_TO); }
+<IP_TO>{WRONGIP}	{ printf("\x1B[31m%s\x1B[0m", yytext); BEGIN(PORT_TO); }
 
 <PORT_TO>(\.{PORT})?:	{ BEGIN(BYTES_DELIM); }
-<PORT_TO>(\.{WRONGPORT})?: { BEGIN(BYTES_DELIM); }
+<PORT_TO>(\.{WRONGPORT})?: { printf(" \x1B[31mwrong port\x1B[0m "); BEGIN(BYTES_DELIM); }
 
 <BYTES_DELIM>" "[SPRF\.]" "{DIGIT}+":"{DIGIT}+"("	{BEGIN(BYTES_SENT);}
 <BYTES_DELIM>" icmp "{DIGIT}+": echo request seq "{DIGIT}+	{BEGIN(NEWLINE);} 
