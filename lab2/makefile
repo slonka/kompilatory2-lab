@@ -9,5 +9,5 @@ ${PROG}: lex.yy.c
 	gcc -o ${PROG} lex.yy.c -lfl
 
 test: all
-	#./slonka < test_1.txt
-	./{PROG} < test_small.txt
+	./${PROG} < test-log
+	#./${PROG} < test_small.txt

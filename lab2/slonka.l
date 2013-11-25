@@ -1,15 +1,7 @@
 %{
 /* slonka.l
-
 #define KRED "\x1B[31m"
 #define KNRM "\x1B[0m"
-#define KGRN "\x1B[32m"
-#define KYEL "\x1B[33m"
-#define KBLU "\x1B[34m"
-#define KMAG "\x1B[35m"
-#define KCYN "\x1B[36m"
-#define KWHT "\x1B[37m"
-
 */
 %}
 
@@ -19,77 +11,74 @@ SECOND	[0-5][0-9]
 MICROSEC	[0-9]{6}
 BYTE	[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]
 IP	{BYTE}\.{BYTE}\.{BYTE}\.{BYTE}
-PORT	[0-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[1-6][0-5][0-9][0-9][0-9]|66[0-4][0-9][0-9]|665[0-2][0-9]|6653[0-5]
+PORT	[0-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]|[0-5][0-9][0-9][0-9][0-9]|6[0-5][0-9][0-9][0-9]|66[0-4][0-9][0-9]|665[0-2][0-9]|6653[0-5]
 SIZE	[0-9]+
 
 DIGIT	[0-9]
 WRONGIP {DIGIT}{1,3}\.{DIGIT}{1,3}\.{DIGIT}{1,3}\.{DIGIT}{1,3}
 WRONGPORT {DIGIT}+
 
+OPTIONS "mss "{DIGIT+}|"nop"|"sackOK"
+
+
 %option yylineno
 
-%{
-
-#define OK 0
-#define SEMANTIC 1
-#define SYNTAX 2
-#define NOT_SET 3
-
-int time_status = NOT_SET;
-int ip_from_status = NOT_SET;
-int ip_to_status = NOT_SET;
-
-char time[9];
-
-// zapamietywac stany
-
-/*^{HOUR}:	{ printf("%s", yytext); }
-^{DIGIT}+:	{ printf("\x1B[31m%s\x1B[0m", yytext); }
-^:.*$	{ printf("\x1B[31m%s %d\x1B[0m", "Brak godziny, linia", line_num); line_num++; }
-
-: { printf(":"); }
-
-{MINUTE}:	{ printf("%s", yytext); }
-{DIGIT}+:	{ printf("\x1B[31m%s\x1B[0m", yytext); }
-:.*$	{ printf("\x1B[31m%s %d\x1B[0m", "Brak minut, linia", line_num); line_num++; }
-
-: { printf(":"); }
-
-{SECOND}	{ printf("%s", yytext); }
-{DIGIT}+	{ printf("\x1B[31m%s\x1B[0m", yytext); }
-\..*$	{ printf("\x1B[31m%s %d\x1B[0m", "Brak sekund, linia", line_num); line_num++;}
-
-\.{MICROSEC}	{}
-\.{DIGIT}+.*$:	{ printf("\x1B[31m%s\x1B[0m", "Niepoprawne milisekundy"); }
-
-" IP "{IP}(\.{PORT})?" > "{IP}(\.{PORT})?.*("("{SIZE}")")?.*$			{ printf("%s", yytext); line_num++; }*/
-
-%}
+%x MSEC
+%x IP_FROM
+%x PORT_FROM
+%x IP2_DELIM
+%x IP_TO
+%x PORT_TO
+%x BYTES_DELIM
+%x BYTES_END
+%x BYTES_SENT
+%x IP_DELIM
+%x END
+%x NEWLINE
+%x GO_TO_NEXT_LINE
 
 %%
 
-^{HOUR}:{MINUTE}:{SECOND}/.{MICROSEC}	{ time_status = OK; strncpy(time, yytext, 9); }
-^{DIGIT}{2}:{DIGIT}{2}:{DIGIT}{2}/.{DIGIT}{6}	{ time_status = SEMANTIC; }
-	
-{IP}(\.{PORT})?/" > "	{ ip_from_status = OK; }
-{IP}(\.{PORT})?/"/"	{ ip_to_status = 0K; }
+^{HOUR}:{MINUTE}:{SECOND}	{ printf("%s", yytext); BEGIN(MSEC); }
+^{DIGIT}{2}:{DIGIT}{2}:{DIGIT}{2}	{ printf("\x1B[31m%s\x1B[0m", yytext); BEGIN(MSEC); }
 
-\n	{ 
-	if(time_status == OK && ) {
-		printf("%s \n", time);
-	}
-	else {
-		printf("Error line %d\n", yylineno);
-	}
+<MSEC>\.{MICROSEC}	{ BEGIN(IP_DELIM); }
 
-}
+<IP_DELIM>" IP "	{ BEGIN(IP_FROM); }
 
-. /* empty */
+<IP_FROM>{IP}	{ printf(" from %s", yytext); BEGIN(PORT_FROM); }
+<IP_FROM>{WRONGIP}	{ printf(" from \x1B[31m%s\x1B[0m", yytext); BEGIN(PORT_FROM); }
+
+<PORT_FROM>(\.{PORT})?" > "	{ printf(" to "); BEGIN(IP_TO); }
+<PORT_FROM>(\.{WRONGPORT})?" > " { printf(" \x1B[31mwrong port\x1B[0m to "); BEGIN(IP_TO); }
+
+<IP_TO>{IP}	{ printf("%s", yytext); BEGIN(PORT_TO); }
+<IP_TO>{WRONGIP}	{ printf("%s", yytext); BEGIN(PORT_TO); }
+
+<PORT_TO>(\.{PORT})?:	{ BEGIN(BYTES_DELIM); }
+<PORT_TO>(\.{WRONGPORT})?: { BEGIN(BYTES_DELIM); }
+
+<BYTES_DELIM>" "[SPRF\.]" "{DIGIT}+":"{DIGIT}+"("	{BEGIN(BYTES_SENT);}
+<BYTES_DELIM>" icmp "{DIGIT}+": echo request seq "{DIGIT}+	{BEGIN(NEWLINE);} 
+<BYTES_DELIM>" icmp "{DIGIT}+": echo reply seq "{DIGIT}+	{BEGIN(NEWLINE);} 
+<BYTES_DELIM>" icmp "{DIGIT}+": time exceeded in-transit"	{BEGIN(NEWLINE);} 
+<BYTES_DELIM>" ." { BEGIN(END); }
+
+<BYTES_SENT>{DIGIT}+	{ printf(" %s bytes", yytext); BEGIN(BYTES_END); }
+
+<BYTES_END>")"	{ BEGIN(END); }
+
+<END>(" ack "{DIGIT}+)?(" win "{DIGIT}+)?(" <"(OPTIONS",")*OPTIONS">")?	{ BEGIN(NEWLINE); }
+<END>(" ack "{DIGIT}+)?(" win "{DIGIT}+)?(" <".*">")?	{ BEGIN(NEWLINE); }
+
+<NEWLINE>\n	{ printf("\n"); BEGIN(0); }
+
+<*>.	{ printf(" - syntax error line %d\n", yylineno); BEGIN(GO_TO_NEXT_LINE); }
+
+<GO_TO_NEXT_LINE>.*$	{ BEGIN(0); }
+
+
 %%
-
-#define OK 0
-#define SEMANTIC 1
-#define SYNTAX 2
 
 int main(int argc, char **argv)
 {
@@ -102,3 +91,5 @@ int main(int argc, char **argv)
     yylex();
     return 0;
 }
+
+
