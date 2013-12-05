@@ -9,17 +9,14 @@ using namespace std;
 
 int yylex(void);
 void yyerror(const char *);
+
+#define YYSTYPE string
 %}
 
-%union {
-double dbl;
-char* p_char;
-}
-
-%token <p_char> DECL_SPECIFIER
-%token <p_char> ID
-%token <p_char> NUM
-%token <p_char> BODY
+%token DECL_SPECIFIER
+%token ID
+%token NUM
+%token BODY
 
 %%
 
@@ -36,7 +33,7 @@ declaration_list: declaration
 	;
 
 declaration: decl_specifier ';'
-	| decl_specifier declarator_list
+	| decl_specifier declarator_list ';'
 	;
 
 declarator_list: declarator
@@ -51,7 +48,7 @@ direct_declarator: id
 	| '(' declarator ')'
         | direct_declarator '[' num ']'
 	| direct_declarator "[]"
-        | direct_declarator '(' param_list ')'
+        | direct_declarator '(' param_list ')' { cout << "direct_declarator (param list)\n"; }
 	| direct_declarator '(' identifier_list ')'
         | direct_declarator "()"
 	;

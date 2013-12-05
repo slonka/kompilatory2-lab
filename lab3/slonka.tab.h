@@ -47,20 +47,7 @@
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef union YYSTYPE
-{
-
-/* Line 2068 of yacc.c  */
-#line 14 "slonka.y"
-
-double dbl;
-char* p_char;
-
-
-
-/* Line 2068 of yacc.c  */
-#line 63 "slonka.tab.h"
-} YYSTYPE;
+typedef int YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
