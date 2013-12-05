@@ -1413,14 +1413,7 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-        case 14:
-
-/* Line 1806 of yacc.c  */
-#line 47 "slonka.y"
-    { cout << "bylem tu"; }
-    break;
-
-  case 18:
+        case 18:
 
 /* Line 1806 of yacc.c  */
 #line 51 "slonka.y"
@@ -1458,7 +1451,7 @@ yyreduce:
 
 
 /* Line 1806 of yacc.c  */
-#line 1462 "slonka.tab.c"
+#line 1455 "slonka.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
