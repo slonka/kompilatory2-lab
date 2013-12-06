@@ -1,16 +1,25 @@
 /* slonka.l */
 
 %{
-		#include "slonka.tab.h" 
-        #include <iostream>
+ 		using namespace std;
         #include <string>
         #define YYSTYPE string
-		using namespace std;
+		#include "slonka.tab.h" 
+        #include <iostream>
+
+        int tmp = 0;
 %}
+
+
 decl_specifier        void|char|short|int|long|float
 id                    [a-z|A-Z]+
 num                   [0-9]+
-body                  "{".*"}"
+body                  "{"
+
+
+%option yylineno
+%x IN_BODY
+
 %%
 
 {decl_specifier}        yylval = yytext; return(DECL_SPECIFIER);
@@ -20,7 +29,12 @@ body                  "{".*"}"
 ")"						yylval = yytext; return(CS);
 ","						yylval = yytext; return(C);
 ";"						yylval = yytext; return(SC);
-{body}                  yylval = "BODY"; return(BODY);	
+
+<INITIAL>{body}         yylval += yytext; BEGIN(IN_BODY);
+<IN_BODY>{
+"}"            yylval += yytext; return(BODY); BEGIN(INITIAL);
+.              yylval += yytext;
+}
 
 [ \n\r\t]				;
 
