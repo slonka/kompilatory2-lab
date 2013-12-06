@@ -1,10 +1,10 @@
 /* slonka.l */
 
 %{
+		#include "slonka.tab.h" 
         #include <iostream>
         #include <string>
         #define YYSTYPE string
-		#include "slonka.tab.h"                
 		using namespace std;
 %}
 decl_specifier        void|char|short|int|long|float

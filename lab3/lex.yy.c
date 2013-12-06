@@ -479,12 +479,12 @@ int yy_flex_debug = 0;
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
 #line 1 "slonka.l"
-/* bison.l */
+/* slonka.l */
 #line 4 "slonka.l"
+		#include "slonka.tab.h" 
         #include <iostream>
         #include <string>
         #define YYSTYPE string
-		#include "slonka.tab.h"                
 		using namespace std;
 #line 490 "lex.yy.c"
 
