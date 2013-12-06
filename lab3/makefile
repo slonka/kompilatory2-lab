@@ -1,5 +1,6 @@
 PROG = slonka
 CC = g++
+BFLAGS = 
 
 .PHONY: test clean help
 
@@ -10,10 +11,11 @@ all: ${PROG}
 release: ${PROG}
 
 debug: CC += -DDEBUG=1 -g
+debug: BFLAGS += --debug
 debug: ${PROG}
 
 ${PROG}.tab.c: ${PROG}.y
-	bison -d ${PROG}.y
+	bison $(BFLAGS) -d ${PROG}.y
 
 lex.yy.c: ${PROG}.l
 	flex ${PROG}.l

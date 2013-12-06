@@ -3,3 +3,42 @@ int a,b,c;
 {
 	/* body */ 
 }
+
+int max(int a, int b, int c)
+{
+	/* body */ 
+}
+
+int rand()
+{
+	/* body */ 
+}
+
+int rand(void)
+{
+	/* body */ 
+}
+
+int f(a,b,c,d)
+int* a,b;
+float c, d[100];
+{
+	/* body */ 
+}
+
+int f(int* a, int b, float c, float d[100])
+{
+	/* body */ 
+}
+
+int f(a)
+int a;
+{
+	/* ... */ 
+}
+
+int f(a,b)
+int c,d;
+{
+	...  
+}

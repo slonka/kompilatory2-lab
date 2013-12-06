@@ -44,7 +44,8 @@
      OB = 262,
      CB = 263,
      SC = 264,
-     C = 265
+     C = 265,
+     WHITESPACE = 266
    };
 #endif
 

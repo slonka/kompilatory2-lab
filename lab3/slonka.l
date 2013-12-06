@@ -15,10 +15,12 @@ decl_specifier        void|char|short|int|long|float
 id                    [a-z|A-Z]+
 num                   [0-9]+
 body                  "{"
-
+whitespace            [ \n\r\t]+
 
 %option yylineno
+
 %x IN_BODY
+
 
 %%
 
@@ -30,12 +32,12 @@ body                  "{"
 ","						yylval = yytext; return(C);
 ";"						yylval = yytext; return(SC);
 
-<INITIAL>{body}         yylval += yytext; BEGIN(IN_BODY);
+{body}                  yylval += yytext; BEGIN(IN_BODY);
 <IN_BODY>{
-"}"            yylval += yytext; return(BODY); BEGIN(INITIAL);
-.              yylval += yytext;
+"}"                     yylval += yytext; BEGIN(INITIAL); return(BODY);
+[.\n]+                  yylval += yytext;
 }
 
-[ \n\r\t]				;
+{whitespace}			;
 
 %%
