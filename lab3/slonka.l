@@ -29,10 +29,12 @@ whitespace            [ \n\r\t]+
 {num}                   yylval = yytext; return(NUM);
 "("						yylval = yytext; return(OB);
 ")"						yylval = yytext; return(CB);
+"["                     yylval = yytext; return(OSB);
+"]"                     yylval = yytext; return(CSB);
 ","						yylval = yytext; return(C);
 ";"						yylval = yytext; return(SC);
 
-{body}                  yylval += yytext; BEGIN(IN_BODY);
+{body}                  yylval = yytext; BEGIN(IN_BODY);
 <IN_BODY>{
 "}"                     yylval += yytext; BEGIN(INITIAL); return(BODY);
 [.\n]+                  yylval += yytext;

@@ -45,7 +45,9 @@
      CB = 263,
      SC = 264,
      C = 265,
-     WHITESPACE = 266
+     OSB = 266,
+     CSB = 267,
+     WHITESPACE = 268
    };
 #endif
 
