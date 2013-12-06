@@ -1,6 +1,12 @@
 PROG = slonka
+CC = g++
+
+.PHONY: test clean help
 
 all : ${PROG} 
+
+debug: CC += -DDEBUG=1 -g
+debug: ${PROG}
 
 ${PROG}.tab.c: ${PROG}.y
 	bison -d ${PROG}.y
@@ -9,9 +15,9 @@ lex.yy.c: ${PROG}.l
 	flex ${PROG}.l
         
 ${PROG}: ${PROG}.tab.c lex.yy.c
-	g++ -o ${PROG}.out ${PROG}.tab.c lex.yy.c ${PROG}.tab.h -lfl
+	$(CC) -o ${PROG}.out ${PROG}.tab.c lex.yy.c ${PROG}.tab.h -lfl
 
-test: all
+test:
 	./${PROG}.out < ${PROG}.test
 
 clean:
@@ -19,3 +25,4 @@ clean:
 
 help:
 	echo "Usage: make all PROG=nazwa_programu"
+
