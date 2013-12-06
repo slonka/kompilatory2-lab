@@ -116,8 +116,8 @@ void yyerror(const char *);
      ID = 259,
      NUM = 260,
      BODY = 261,
-     OP = 262,
-     CS = 263,
+     OB = 262,
+     CB = 263,
      SC = 264,
      C = 265
    };
@@ -455,7 +455,7 @@ static const yytype_uint8 yyrline[] =
 static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "DECL_SPECIFIER", "ID", "NUM", "BODY",
-  "OP", "CS", "SC", "C", "'['", "']'", "\"[]\"", "'*'", "$accept",
+  "OB", "CB", "SC", "C", "'['", "']'", "\"[]\"", "'*'", "$accept",
   "function", "declaration_list", "declaration", "declarator_list",
   "declarator", "direct_declarator", "identifier_list", "param_list",
   "param_declaration", "abstract_declarator", "direct_abstract_declarator",

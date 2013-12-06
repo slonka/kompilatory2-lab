@@ -811,12 +811,12 @@ yylval = yytext; return(NUM);
 case 4:
 YY_RULE_SETUP
 #line 28 "slonka.l"
-yylval = yytext; return(OP);
+yylval = yytext; return(OB);
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 29 "slonka.l"
-yylval = yytext; return(CS);
+yylval = yytext; return(CB);
 	YY_BREAK
 case 6:
 YY_RULE_SETUP

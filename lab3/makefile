@@ -3,7 +3,11 @@ CC = g++
 
 .PHONY: test clean help
 
-all : ${PROG} 
+#change to release to get default release
+default: debug
+
+all: ${PROG}
+release: ${PROG}
 
 debug: CC += -DDEBUG=1 -g
 debug: ${PROG}

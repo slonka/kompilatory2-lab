@@ -25,8 +25,8 @@ body                  "{"
 {decl_specifier}        yylval = yytext; return(DECL_SPECIFIER);
 {id}                    yylval = yytext; return(ID);
 {num}                   yylval = yytext; return(NUM);
-"("						yylval = yytext; return(OP);
-")"						yylval = yytext; return(CS);
+"("						yylval = yytext; return(OB);
+")"						yylval = yytext; return(CB);
 ","						yylval = yytext; return(C);
 ";"						yylval = yytext; return(SC);
 

@@ -21,10 +21,10 @@ void yyerror(const char *);
 %token ID
 %token NUM
 %token BODY
-%token OP
-%token CS
-%token SC
-%token C
+%token OB /* open bracket */
+%token CB /* close bracket */
+%token SC /* semi-colon */
+%token C /* comma */
 
 %%
 
@@ -53,12 +53,12 @@ declarator: pointer direct_declarator					{ if(DEBUG) { $$ = $1 + $2;		std::cout
         ;	
 
 direct_declarator: id									{ if(DEBUG) { $$ = $1;					std::cout << "declarator: "+ string($$) + "\n&&\n";}}	
-        | OP declarator CS								{ if(DEBUG) { $$ = "(" + $2 + ")";		std::cout << "declarator: "+ string($$) + "\n&&\n";}}
+        | OB declarator CB								{ if(DEBUG) { $$ = "(" + $2 + ")";		std::cout << "declarator: "+ string($$) + "\n&&\n";}}
         | direct_declarator '[' num ']'					{ if(DEBUG) { $$ = $1 + "[" + $3 + "]";	std::cout << "declarator: "+ string($$) + "\n&&\n";}}
         | direct_declarator "[]"						{ if(DEBUG) { $$ = $1 + "[]";			std::cout << "declarator: "+ string($$) + "\n&&\n";}}	
-        | direct_declarator OP param_list CS			{ if(DEBUG) { $$ = $1 + "("  +$3 + ")";	std::cout << "declarator: "+ string($$) + "\n&&\n";}}	
-        | direct_declarator OP identifier_list CS		{ if(DEBUG) { $$ = $1 + "("  +$3 + ")";	std::cout << "declarator: "+ string($$) + "\n&&\n";}}		
-        | direct_declarator OP CS						{ if(DEBUG) { $$ = $1 + "()";			std::cout << "declarator: "+ string($$) + "\n&&\n";}}	
+        | direct_declarator OB param_list CB			{ if(DEBUG) { $$ = $1 + "("  +$3 + ")";	std::cout << "declarator: "+ string($$) + "\n&&\n";}}	
+        | direct_declarator OB identifier_list CB		{ if(DEBUG) { $$ = $1 + "("  +$3 + ")";	std::cout << "declarator: "+ string($$) + "\n&&\n";}}		
+        | direct_declarator OB CB						{ if(DEBUG) { $$ = $1 + "()";			std::cout << "declarator: "+ string($$) + "\n&&\n";}}	
         ;
 	
 identifier_list: id										{ if(DEBUG) { $$ = $1;	std::cout << "id_list: "+ string($$) + "\n&&\n";}}
@@ -79,15 +79,15 @@ abstract_declarator: pointer							{ if(DEBUG) { $$ = $1;		std::cout << "ab_decl
         | direct_abstract_declarator					{ if(DEBUG) { $$ = $1;		std::cout << "ab_decl: "+ string($$) + "\n&&\n";}}
         ;
 
-direct_abstract_declarator: OP abstract_declarator CS		{ if(DEBUG) { $$ = "(" + $2 + ")";		std::cout << "d_a_decl: "+ string($$) + "\n&&\n";}}
+direct_abstract_declarator: OB abstract_declarator CB		{ if(DEBUG) { $$ = "(" + $2 + ")";		std::cout << "d_a_decl: "+ string($$) + "\n&&\n";}}
         | direct_abstract_declarator '[' num ']'			{ if(DEBUG) { $$ = $1 + "[" + $3 + "]";	std::cout << "d_a_decl: "+ string($$) + "\n&&\n";}}
         | '[' num ']'										{ if(DEBUG) { $$ = "[" + $2 + "]";		std::cout << "d_a_decl: "+ string($$) + "\n&&\n";}}
         | direct_abstract_declarator "[]"					{ if(DEBUG) { $$ = $1 + "[]";			std::cout << "d_a_decl: "+ string($$) + "\n&&\n";}}
         | "[]"												{ if(DEBUG) { $$ = "[]";				std::cout << "d_a_decl: "+ string($$) + "\n&&\n";}}
-        | direct_abstract_declarator OP param_list CS		{ if(DEBUG) { $$ = $1 + "(" + $3 + ")";	std::cout << "d_a_decl: "+ string($$) + "\n&&\n";}}
-        | direct_abstract_declarator OP CS					{ if(DEBUG) { $$ = $1 + "()";			std::cout << "d_a_decl: "+ string($$) + "\n&&\n";}}
-        | OP param_list CS									{ if(DEBUG) { $$ = "(" + $1 + ")";		std::cout << "d_a_decl: "+ string($$) + "\n&&\n";}}
-        | OP CS												{ if(DEBUG) { $$ = "()";				std::cout << "d_a_decl: "+ string($$) + "\n&&\n";}}
+        | direct_abstract_declarator OB param_list CB		{ if(DEBUG) { $$ = $1 + "(" + $3 + ")";	std::cout << "d_a_decl: "+ string($$) + "\n&&\n";}}
+        | direct_abstract_declarator OB CB					{ if(DEBUG) { $$ = $1 + "()";			std::cout << "d_a_decl: "+ string($$) + "\n&&\n";}}
+        | OB param_list CB									{ if(DEBUG) { $$ = "(" + $1 + ")";		std::cout << "d_a_decl: "+ string($$) + "\n&&\n";}}
+        | OB CB												{ if(DEBUG) { $$ = "()";				std::cout << "d_a_decl: "+ string($$) + "\n&&\n";}}
         ;
 
 pointer: '*'
