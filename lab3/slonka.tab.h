@@ -40,7 +40,11 @@
      DECL_SPECIFIER = 258,
      ID = 259,
      NUM = 260,
-     BODY = 261
+     BODY = 261,
+     OP = 262,
+     CS = 263,
+     SC = 264,
+     C = 265
    };
 #endif
 
