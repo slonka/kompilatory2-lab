@@ -17,7 +17,19 @@ void yyerror(const char *);
     #define DEBUG 0
 #endif
 
-map<string, string> arguments;
+typedef map<string,string> argmap;
+
+argmap arguments;
+
+void print_body(string body) {
+    cout << body << endl;
+}
+
+void print_map(argmap m) {
+    for(argmap::iterator it=m.begin(); it!=m.end(); ++it) {
+        cout << it->first << " => " << it->second << '\n';
+    }
+}
 
 %}
 
@@ -41,14 +53,41 @@ functions: function { $$ = $1; if(DEBUG) {cout << "functions1: " + string($$) + 
         | function functions { $$ = $1 + $2; if(DEBUG) {cout << "functions2: " + string($$) + "\n";}}
         ;
 
-function: decl_specifier declarator declaration_list body       {
-    $$ = $1 + ' ' + $2 + ' ' + $3 + ' ' + $4;
-    
+function: decl_specifier declarator declaration_list body {
+    $$ = $1 + ' ' + $2 + ' ' + $3 + '\n' + $4;
+
+    print_body($4);    
+    print_map(arguments);
+
     if(DEBUG) { cout << "function: "+ string($$) + "\n&&\n";}
 }
-        | declarator declaration_list body						{ $$ = $1 + ' ' + $2 + ' ' + $3;		if(DEBUG) { cout << "function: "+ string($$) + "\n&&\n";}}
-        | decl_specifier declarator body						{ $$ = $1 + ' ' + $2 + ' ' + $3;		if(DEBUG) { cout << "function: "+ string($$) + "\n&&\n";}}
-        | declarator body										{ $$ = $1 + ' ' + $2;				if(DEBUG) { cout << "function: "+ string($$) + "\n&&\n";}}
+
+        | declarator declaration_list body {
+    $$ = $1 + ' ' + $2 + '\n' + $3;	
+    
+    print_body($3);
+    print_map(arguments);
+
+    if(DEBUG) { cout << "function: "+ string($$) + "\n&&\n";}
+}
+
+        | decl_specifier declarator body {
+    $$ = $1 + ' ' + $2 + '\n' + $3; 
+
+    print_body($3);
+    print_map(arguments);
+
+    if(DEBUG) { cout << "function: "+ string($$) + "\n&&\n";}
+}
+
+        | declarator body { 
+    $$ = $1 + '\n' + $2;
+
+    print_body($2);
+    print_map(arguments);
+
+    if(DEBUG) { cout << "function: "+ string($$) + "\n&&\n";}
+}
         ;
 	
 declaration_list: declaration							{ $$ = $1;			if(DEBUG) { cout << "declaration_list1: "+ string($$) + "\n&&\n";}}
@@ -80,11 +119,19 @@ identifier_list: id										{ $$ = $1;	if(DEBUG) { cout << "id_list: "+ string(
         | id C identifier_list							{ $$ = $1 + "," + $3;	if(DEBUG) { cout << "id_list: "+ string($$) + "\n&&\n";}}
         ;
 
-param_list: param_declaration							{ $$ = $1;	if(DEBUG) { cout << "param_decl: "+ string($$) + "\n&&\n";}}
-        | param_declaration C param_list				{ $$ = $1 + "," + $3;	if(DEBUG) { cout << "param_decl: "+ string($$) + "\n&&\n";}}
+param_list: param_declaration { 
+    $$ = $1;	if(DEBUG) { cout << "param_decl: "+ string($$) + "\n&&\n";}
+}
+        | param_declaration C param_list {
+    $$ = $1 + ", " + $3;	if(DEBUG) { cout << "param_decl: "+ string($$) + "\n&&\n";}
+}
         ;
 
-param_declaration: decl_specifier declarator			{ $$ = $1 + $2;	if(DEBUG) { cout << "param_decl: "+ string($$) + "\n&&\n";}}
+param_declaration: decl_specifier declarator {
+    $$ = $1 + ' ' + $2;
+    if(DEBUG) { cout << "param_decl: "+ string($$) + "\n&&\n";}
+    arguments[$2] = $1;
+}
         | decl_specifier								{ $$ = $1;		if(DEBUG) { cout << "param_decl: "+ string($$) + "\n&&\n";}}
         | decl_specifier abstract_declarator			{ $$ = $1 + $2;	if(DEBUG) { cout << "param_decl: "+ string($$) + "\n&&\n";}}
         ;
@@ -121,9 +168,9 @@ void yyerror(const char *s) {
 }
 
 int main() {
-    if (0) {
+    /* if (0) {
         yydebug = 1;
-    }
+    }*/
     yyparse();
 }
 

@@ -84,16 +84,28 @@ void yyerror(const char *);
     #define DEBUG 0
 #endif
 
-map<string, string> arguments;
+typedef map<string,string> argmap;
+
+argmap arguments;
+
+void print_body(string body) {
+    cout << body << endl;
+}
+
+void print_map(argmap m) {
+    for(argmap::iterator it=m.begin(); it!=m.end(); ++it) {
+        cout << it->first << " => " << it->second << '\n';
+    }
+}
 
 
 
 /* Line 268 of yacc.c  */
-#line 93 "slonka.tab.c"
+#line 105 "slonka.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 1
+# define YYDEBUG 0
 #endif
 
 /* Enabling verbose error messages.  */
@@ -145,7 +157,7 @@ typedef int YYSTYPE;
 
 
 /* Line 343 of yacc.c  */
-#line 149 "slonka.tab.c"
+#line 161 "slonka.tab.c"
 
 #ifdef short
 # undef short
@@ -449,11 +461,11 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    40,    40,    41,    44,    49,    50,    51,    54,    55,
-      58,    59,    62,    63,    66,    67,    70,    71,    72,    73,
-      74,    75,    76,    79,    80,    83,    84,    87,    88,    89,
-      92,    93,    94,    97,    98,    99,   100,   101,   102,   103,
-     104,   105,   108,   109,   113,   114,   115,   116
+       0,    52,    52,    53,    56,    65,    74,    83,    93,    94,
+      97,    98,   101,   102,   105,   106,   109,   110,   111,   112,
+     113,   114,   115,   118,   119,   122,   125,   130,   135,   136,
+     139,   140,   141,   144,   145,   146,   147,   148,   149,   150,
+     151,   152,   155,   156,   160,   161,   162,   163
 };
 #endif
 
@@ -1432,24 +1444,27 @@ yyreduce:
         case 2:
 
 /* Line 1806 of yacc.c  */
-#line 40 "slonka.y"
+#line 52 "slonka.y"
     { (yyval) = (yyvsp[(1) - (1)]); if(DEBUG) {cout << "functions1: " + string((yyval)) + "\n";}}
     break;
 
   case 3:
 
 /* Line 1806 of yacc.c  */
-#line 41 "slonka.y"
+#line 53 "slonka.y"
     { (yyval) = (yyvsp[(1) - (2)]) + (yyvsp[(2) - (2)]); if(DEBUG) {cout << "functions2: " + string((yyval)) + "\n";}}
     break;
 
   case 4:
 
 /* Line 1806 of yacc.c  */
-#line 44 "slonka.y"
+#line 56 "slonka.y"
     {
-    (yyval) = (yyvsp[(1) - (4)]) + ' ' + (yyvsp[(2) - (4)]) + ' ' + (yyvsp[(3) - (4)]) + ' ' + (yyvsp[(4) - (4)]);
-    
+    (yyval) = (yyvsp[(1) - (4)]) + ' ' + (yyvsp[(2) - (4)]) + ' ' + (yyvsp[(3) - (4)]) + '\n' + (yyvsp[(4) - (4)]);
+
+    print_body((yyvsp[(4) - (4)]));    
+    print_map(arguments);
+
     if(DEBUG) { cout << "function: "+ string((yyval)) + "\n&&\n";}
 }
     break;
@@ -1457,301 +1472,330 @@ yyreduce:
   case 5:
 
 /* Line 1806 of yacc.c  */
-#line 49 "slonka.y"
-    { (yyval) = (yyvsp[(1) - (3)]) + ' ' + (yyvsp[(2) - (3)]) + ' ' + (yyvsp[(3) - (3)]);		if(DEBUG) { cout << "function: "+ string((yyval)) + "\n&&\n";}}
+#line 65 "slonka.y"
+    {
+    (yyval) = (yyvsp[(1) - (3)]) + ' ' + (yyvsp[(2) - (3)]) + '\n' + (yyvsp[(3) - (3)]);	
+    
+    print_body((yyvsp[(3) - (3)]));
+    print_map(arguments);
+
+    if(DEBUG) { cout << "function: "+ string((yyval)) + "\n&&\n";}
+}
     break;
 
   case 6:
 
 /* Line 1806 of yacc.c  */
-#line 50 "slonka.y"
-    { (yyval) = (yyvsp[(1) - (3)]) + ' ' + (yyvsp[(2) - (3)]) + ' ' + (yyvsp[(3) - (3)]);		if(DEBUG) { cout << "function: "+ string((yyval)) + "\n&&\n";}}
+#line 74 "slonka.y"
+    {
+    (yyval) = (yyvsp[(1) - (3)]) + ' ' + (yyvsp[(2) - (3)]) + '\n' + (yyvsp[(3) - (3)]); 
+
+    print_body((yyvsp[(3) - (3)]));
+    print_map(arguments);
+
+    if(DEBUG) { cout << "function: "+ string((yyval)) + "\n&&\n";}
+}
     break;
 
   case 7:
 
 /* Line 1806 of yacc.c  */
-#line 51 "slonka.y"
-    { (yyval) = (yyvsp[(1) - (2)]) + ' ' + (yyvsp[(2) - (2)]);				if(DEBUG) { cout << "function: "+ string((yyval)) + "\n&&\n";}}
+#line 83 "slonka.y"
+    { 
+    (yyval) = (yyvsp[(1) - (2)]) + '\n' + (yyvsp[(2) - (2)]);
+
+    print_body((yyvsp[(2) - (2)]));
+    print_map(arguments);
+
+    if(DEBUG) { cout << "function: "+ string((yyval)) + "\n&&\n";}
+}
     break;
 
   case 8:
 
 /* Line 1806 of yacc.c  */
-#line 54 "slonka.y"
+#line 93 "slonka.y"
     { (yyval) = (yyvsp[(1) - (1)]);			if(DEBUG) { cout << "declaration_list1: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 9:
 
 /* Line 1806 of yacc.c  */
-#line 55 "slonka.y"
+#line 94 "slonka.y"
     { (yyval) = (yyvsp[(1) - (2)]) + (yyvsp[(2) - (2)]);		if(DEBUG) { cout << "declaration_list2: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 10:
 
 /* Line 1806 of yacc.c  */
-#line 58 "slonka.y"
+#line 97 "slonka.y"
     { (yyval) = (yyvsp[(1) - (2)]) + ";";			if(DEBUG) { cout << "declaration: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 11:
 
 /* Line 1806 of yacc.c  */
-#line 59 "slonka.y"
+#line 98 "slonka.y"
     { (yyval) = (yyvsp[(1) - (3)]) + " " + (yyvsp[(2) - (3)]) + ";";	if(DEBUG) { cout << "declaration: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 12:
 
 /* Line 1806 of yacc.c  */
-#line 62 "slonka.y"
+#line 101 "slonka.y"
     { (yyval) = (yyvsp[(1) - (1)]);				if(DEBUG) { cout << "declarator_list: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 13:
 
 /* Line 1806 of yacc.c  */
-#line 63 "slonka.y"
+#line 102 "slonka.y"
     { (yyval) = (yyvsp[(1) - (3)]) + "," + (yyvsp[(3) - (3)]);	if(DEBUG) { cout << "declarator_list: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 14:
 
 /* Line 1806 of yacc.c  */
-#line 66 "slonka.y"
+#line 105 "slonka.y"
     { (yyval) = (yyvsp[(1) - (2)]) + (yyvsp[(2) - (2)]);		if(DEBUG) { cout << "declarator: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 15:
 
 /* Line 1806 of yacc.c  */
-#line 67 "slonka.y"
+#line 106 "slonka.y"
     { (yyval) = (yyvsp[(1) - (1)]);			if(DEBUG) { cout << "declarator: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 16:
 
 /* Line 1806 of yacc.c  */
-#line 70 "slonka.y"
+#line 109 "slonka.y"
     { (yyval) = (yyvsp[(1) - (1)]);					if(DEBUG) { cout << "declarator: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 17:
 
 /* Line 1806 of yacc.c  */
-#line 71 "slonka.y"
+#line 110 "slonka.y"
     { (yyval) = "(" + (yyvsp[(2) - (3)]) + ")";		if(DEBUG) { cout << "declarator: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 18:
 
 /* Line 1806 of yacc.c  */
-#line 72 "slonka.y"
+#line 111 "slonka.y"
     { (yyval) = (yyvsp[(1) - (4)]) + "[" + (yyvsp[(3) - (4)]) + "]";	if(DEBUG) { cout << "declarator: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 19:
 
 /* Line 1806 of yacc.c  */
-#line 73 "slonka.y"
+#line 112 "slonka.y"
     { (yyval) = (yyvsp[(1) - (2)]) + "[]";			if(DEBUG) { cout << "declarator: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 20:
 
 /* Line 1806 of yacc.c  */
-#line 74 "slonka.y"
+#line 113 "slonka.y"
     { (yyval) = (yyvsp[(1) - (4)]) + "("  +(yyvsp[(3) - (4)]) + ")";	if(DEBUG) { cout << "declarator: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 21:
 
 /* Line 1806 of yacc.c  */
-#line 75 "slonka.y"
+#line 114 "slonka.y"
     { (yyval) = (yyvsp[(1) - (4)]) + "("  +(yyvsp[(3) - (4)]) + ")";	if(DEBUG) { cout << "declarator: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 22:
 
 /* Line 1806 of yacc.c  */
-#line 76 "slonka.y"
+#line 115 "slonka.y"
     { (yyval) = (yyvsp[(1) - (3)]) + "()";			if(DEBUG) { cout << "declarator: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 23:
 
 /* Line 1806 of yacc.c  */
-#line 79 "slonka.y"
+#line 118 "slonka.y"
     { (yyval) = (yyvsp[(1) - (1)]);	if(DEBUG) { cout << "id_list: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 24:
 
 /* Line 1806 of yacc.c  */
-#line 80 "slonka.y"
+#line 119 "slonka.y"
     { (yyval) = (yyvsp[(1) - (3)]) + "," + (yyvsp[(3) - (3)]);	if(DEBUG) { cout << "id_list: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 25:
 
 /* Line 1806 of yacc.c  */
-#line 83 "slonka.y"
-    { (yyval) = (yyvsp[(1) - (1)]);	if(DEBUG) { cout << "param_decl: "+ string((yyval)) + "\n&&\n";}}
+#line 122 "slonka.y"
+    { 
+    (yyval) = (yyvsp[(1) - (1)]);	if(DEBUG) { cout << "param_decl: "+ string((yyval)) + "\n&&\n";}
+}
     break;
 
   case 26:
 
 /* Line 1806 of yacc.c  */
-#line 84 "slonka.y"
-    { (yyval) = (yyvsp[(1) - (3)]) + "," + (yyvsp[(3) - (3)]);	if(DEBUG) { cout << "param_decl: "+ string((yyval)) + "\n&&\n";}}
+#line 125 "slonka.y"
+    {
+    (yyval) = (yyvsp[(1) - (3)]) + ", " + (yyvsp[(3) - (3)]);	if(DEBUG) { cout << "param_decl: "+ string((yyval)) + "\n&&\n";}
+}
     break;
 
   case 27:
 
 /* Line 1806 of yacc.c  */
-#line 87 "slonka.y"
-    { (yyval) = (yyvsp[(1) - (2)]) + (yyvsp[(2) - (2)]);	if(DEBUG) { cout << "param_decl: "+ string((yyval)) + "\n&&\n";}}
+#line 130 "slonka.y"
+    {
+    (yyval) = (yyvsp[(1) - (2)]) + ' ' + (yyvsp[(2) - (2)]);
+    if(DEBUG) { cout << "param_decl: "+ string((yyval)) + "\n&&\n";}
+    arguments[(yyvsp[(2) - (2)])] = (yyvsp[(1) - (2)]);
+}
     break;
 
   case 28:
 
 /* Line 1806 of yacc.c  */
-#line 88 "slonka.y"
+#line 135 "slonka.y"
     { (yyval) = (yyvsp[(1) - (1)]);		if(DEBUG) { cout << "param_decl: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 29:
 
 /* Line 1806 of yacc.c  */
-#line 89 "slonka.y"
+#line 136 "slonka.y"
     { (yyval) = (yyvsp[(1) - (2)]) + (yyvsp[(2) - (2)]);	if(DEBUG) { cout << "param_decl: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 30:
 
 /* Line 1806 of yacc.c  */
-#line 92 "slonka.y"
+#line 139 "slonka.y"
     { (yyval) = (yyvsp[(1) - (1)]);		if(DEBUG) { cout << "ab_decl: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 31:
 
 /* Line 1806 of yacc.c  */
-#line 93 "slonka.y"
+#line 140 "slonka.y"
     { (yyval) = (yyvsp[(1) - (2)]) + (yyvsp[(2) - (2)]);	if(DEBUG) { cout << "ab_decl: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 32:
 
 /* Line 1806 of yacc.c  */
-#line 94 "slonka.y"
+#line 141 "slonka.y"
     { (yyval) = (yyvsp[(1) - (1)]);		if(DEBUG) { cout << "ab_decl: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 33:
 
 /* Line 1806 of yacc.c  */
-#line 97 "slonka.y"
+#line 144 "slonka.y"
     { (yyval) = "(" + (yyvsp[(2) - (3)]) + ")";		if(DEBUG) { cout << "d_a_decl: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 34:
 
 /* Line 1806 of yacc.c  */
-#line 98 "slonka.y"
+#line 145 "slonka.y"
     { (yyval) = (yyvsp[(1) - (4)]) + "[" + (yyvsp[(3) - (4)]) + "]";	if(DEBUG) { cout << "d_a_decl: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 35:
 
 /* Line 1806 of yacc.c  */
-#line 99 "slonka.y"
+#line 146 "slonka.y"
     { (yyval) = "[" + (yyvsp[(2) - (3)]) + "]";		if(DEBUG) { cout << "d_a_decl: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 36:
 
 /* Line 1806 of yacc.c  */
-#line 100 "slonka.y"
+#line 147 "slonka.y"
     { (yyval) = (yyvsp[(1) - (2)]) + "[]";			if(DEBUG) { cout << "d_a_decl: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 37:
 
 /* Line 1806 of yacc.c  */
-#line 101 "slonka.y"
+#line 148 "slonka.y"
     { (yyval) = "[]";				if(DEBUG) { cout << "d_a_decl: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 38:
 
 /* Line 1806 of yacc.c  */
-#line 102 "slonka.y"
+#line 149 "slonka.y"
     { (yyval) = (yyvsp[(1) - (4)]) + "(" + (yyvsp[(3) - (4)]) + ")";	if(DEBUG) { cout << "d_a_decl: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 39:
 
 /* Line 1806 of yacc.c  */
-#line 103 "slonka.y"
+#line 150 "slonka.y"
     { (yyval) = (yyvsp[(1) - (3)]) + "()";			if(DEBUG) { cout << "d_a_decl: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 40:
 
 /* Line 1806 of yacc.c  */
-#line 104 "slonka.y"
+#line 151 "slonka.y"
     { (yyval) = "(" + (yyvsp[(1) - (3)]) + ")";		if(DEBUG) { cout << "d_a_decl: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 41:
 
 /* Line 1806 of yacc.c  */
-#line 105 "slonka.y"
+#line 152 "slonka.y"
     { (yyval) = "()";				if(DEBUG) { cout << "d_a_decl: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 43:
 
 /* Line 1806 of yacc.c  */
-#line 109 "slonka.y"
+#line 156 "slonka.y"
     { (yyval) = '*' + (yyvsp[(2) - (2)]); }
     break;
 
   case 44:
 
 /* Line 1806 of yacc.c  */
-#line 113 "slonka.y"
+#line 160 "slonka.y"
     { if(DEBUG) { std::cout << "decl_specifier: "+ string((yyval)) +"\n&&\n";}}
     break;
 
   case 45:
 
 /* Line 1806 of yacc.c  */
-#line 114 "slonka.y"
+#line 161 "slonka.y"
     { if(DEBUG) { std::cout << "id: "+ string((yyval)) +"\n&&\n";}}
     break;
 
   case 46:
 
 /* Line 1806 of yacc.c  */
-#line 115 "slonka.y"
+#line 162 "slonka.y"
     { if(DEBUG) { std::cout << "num: "+ string((yyval)) + "\n&&\n";}}
     break;
 
   case 47:
 
 /* Line 1806 of yacc.c  */
-#line 116 "slonka.y"
+#line 163 "slonka.y"
     { if(DEBUG) { std::cout << "body: "+ string((yyval)) + "\n&&\n";}}
     break;
 
 
 
 /* Line 1806 of yacc.c  */
-#line 1755 "slonka.tab.c"
+#line 1799 "slonka.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1982,16 +2026,16 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 118 "slonka.y"
+#line 165 "slonka.y"
 
 void yyerror(const char *s) {
    cout << "blad: " + string(s) +"\n&&\n";
 }
 
 int main() {
-    if (0) {
+    /* if (0) {
         yydebug = 1;
-    }
+    }*/
     yyparse();
 }
 
