@@ -4,7 +4,7 @@ int a,b,c;
 	/* body */ 
 }
 
-int max(int a, int b, int c)
+int max(int a, int b, int c[])
 {
 	/* body */ 
 }

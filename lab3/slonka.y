@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <string>
+#include <map>
 
 using namespace std;
 
@@ -15,6 +16,9 @@ void yyerror(const char *);
 #ifndef DEBUG
     #define DEBUG 0
 #endif
+
+map<string, string> arguments;
+
 %}
 
 %token DECL_SPECIFIER
@@ -28,6 +32,7 @@ void yyerror(const char *);
 %token OSB /* open square bracket */
 %token CSB /* close square bracket */
 %token WHITESPACE
+%token ESB /* empty square brackets [] */
 
 %%
 
@@ -36,7 +41,11 @@ functions: function { $$ = $1; if(DEBUG) {cout << "functions1: " + string($$) + 
         | function functions { $$ = $1 + $2; if(DEBUG) {cout << "functions2: " + string($$) + "\n";}}
         ;
 
-function: decl_specifier declarator declaration_list body       { $$ = $1 + ' ' + $2 + ' ' + $3 + ' ' + $4;	if(DEBUG) { cout << "function: "+ string($$) + "\n&&\n";}}
+function: decl_specifier declarator declaration_list body       {
+    $$ = $1 + ' ' + $2 + ' ' + $3 + ' ' + $4;
+    
+    if(DEBUG) { cout << "function: "+ string($$) + "\n&&\n";}
+}
         | declarator declaration_list body						{ $$ = $1 + ' ' + $2 + ' ' + $3;		if(DEBUG) { cout << "function: "+ string($$) + "\n&&\n";}}
         | decl_specifier declarator body						{ $$ = $1 + ' ' + $2 + ' ' + $3;		if(DEBUG) { cout << "function: "+ string($$) + "\n&&\n";}}
         | declarator body										{ $$ = $1 + ' ' + $2;				if(DEBUG) { cout << "function: "+ string($$) + "\n&&\n";}}
@@ -61,7 +70,7 @@ declarator: pointer direct_declarator					{ $$ = $1 + $2;		if(DEBUG) { cout << "
 direct_declarator: id									{ $$ = $1;					if(DEBUG) { cout << "declarator: "+ string($$) + "\n&&\n";}}	
         | OB declarator CB								{ $$ = "(" + $2 + ")";		if(DEBUG) { cout << "declarator: "+ string($$) + "\n&&\n";}}
         | direct_declarator OSB num CSB					{ $$ = $1 + "[" + $3 + "]";	if(DEBUG) { cout << "declarator: "+ string($$) + "\n&&\n";}}
-        | direct_declarator "[]"						{ $$ = $1 + "[]";			if(DEBUG) { cout << "declarator: "+ string($$) + "\n&&\n";}}	
+        | direct_declarator ESB 						{ $$ = $1 + "[]";			if(DEBUG) { cout << "declarator: "+ string($$) + "\n&&\n";}}	
         | direct_declarator OB param_list CB			{ $$ = $1 + "("  +$3 + ")";	if(DEBUG) { cout << "declarator: "+ string($$) + "\n&&\n";}}	
         | direct_declarator OB identifier_list CB		{ $$ = $1 + "("  +$3 + ")";	if(DEBUG) { cout << "declarator: "+ string($$) + "\n&&\n";}}		
         | direct_declarator OB CB						{ $$ = $1 + "()";			if(DEBUG) { cout << "declarator: "+ string($$) + "\n&&\n";}}	
@@ -88,8 +97,8 @@ abstract_declarator: pointer							{ $$ = $1;		if(DEBUG) { cout << "ab_decl: "+ 
 direct_abstract_declarator: OB abstract_declarator CB		{ $$ = "(" + $2 + ")";		if(DEBUG) { cout << "d_a_decl: "+ string($$) + "\n&&\n";}}
         | direct_abstract_declarator OSB num CSB			{ $$ = $1 + "[" + $3 + "]";	if(DEBUG) { cout << "d_a_decl: "+ string($$) + "\n&&\n";}}
         | OSB num CSB										{ $$ = "[" + $2 + "]";		if(DEBUG) { cout << "d_a_decl: "+ string($$) + "\n&&\n";}}
-        | direct_abstract_declarator "[]"					{ $$ = $1 + "[]";			if(DEBUG) { cout << "d_a_decl: "+ string($$) + "\n&&\n";}}
-        | "[]"												{ $$ = "[]";				if(DEBUG) { cout << "d_a_decl: "+ string($$) + "\n&&\n";}}
+        | direct_abstract_declarator ESB 					{ $$ = $1 + "[]";			if(DEBUG) { cout << "d_a_decl: "+ string($$) + "\n&&\n";}}
+        | ESB												{ $$ = "[]";				if(DEBUG) { cout << "d_a_decl: "+ string($$) + "\n&&\n";}}
         | direct_abstract_declarator OB param_list CB		{ $$ = $1 + "(" + $3 + ")";	if(DEBUG) { cout << "d_a_decl: "+ string($$) + "\n&&\n";}}
         | direct_abstract_declarator OB CB					{ $$ = $1 + "()";			if(DEBUG) { cout << "d_a_decl: "+ string($$) + "\n&&\n";}}
         | OB param_list CB									{ $$ = "(" + $1 + ")";		if(DEBUG) { cout << "d_a_decl: "+ string($$) + "\n&&\n";}}
