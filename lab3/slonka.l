@@ -10,9 +10,8 @@
         int opening_braces = 0;
 %}
 
-
-decl_specifier        void|char|short|int|long|float
 id                    [a-z|A-Z][a-z|A-Z|0-9_-]*
+decl_specifier        void|char|short|int|long|float|"struct "{id}|"enum "{id}
 num                   [0-9]+
 body                  "{"
 whitespace            [ \n\r\t]+
@@ -53,7 +52,7 @@ esb                   "[]"
     "/*"                    yylval += yytext; BEGIN(IN_COMMENT);
     {any}                   yylval += yytext; /* anything other */
 }
-
+// poprawic na comment i string http://home.agh.edu.pl/~mkuta/tk/flex/flex.pdf
 <IN_COMMENT>{
      "*/"      yylval += yytext; BEGIN(IN_BODY);
      {any}     yylval += yytext;

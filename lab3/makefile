@@ -5,7 +5,7 @@ BFLAGS =
 .PHONY: test clean help
 
 #change to release to get default release
-default: debug
+default: release
 
 all: ${PROG}
 release: ${PROG}
